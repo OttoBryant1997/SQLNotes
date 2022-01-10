@@ -1,0 +1,49 @@
+/*
+事务并发问题:脏读 不可重复读 幻读 
+解释
+脏读 读未提交
+不可重复读 每次读取的数据不一样
+幻读 数据总数不一样
+
+隔离级别:
+READ UNCOMMITTED  会出现三个并发问题
+READ COMMIT				会出现幻读 不可重复读
+REPEATABLE READ		会出现幻读
+SERIALIZABLE			不会出现问题，但是效率较低
+
+事务
+隐式事务
+显式事务
+
+SET AUTOCOMMIT = 0;
+START 
+DMLs
+COMMIT OR ROLLBACK
+*/
+
+
+
+
+SHOW VARIABLES LIKE 'autocommit';
+/*
+旧版使用 tx_isolation
+*/
+show variables LIKE 'transaction_isolation';
+select @@transaction_isolation;
+
+/**
+锁
+行锁和表锁
+加行锁会自动加意向锁，意向锁相当于表锁 (IX IS) ，意向锁和表锁遵循读写锁模式，意向锁和行锁之间没有冲突
+行锁可以继续细分，Next-Key Lock、Gap Lock、Record Lock以及插入意向GAP锁
+Next-Key Lock  是不连续索引的左开右闭区间
+Gap Lock   是不连续索引的左右开区间，间隙锁之间如果不是插入同一个是可以共存的
+Record Lock  是行锁 
+插入意向锁相当于间隙锁，和间隙锁,Next-Key Lock不共存
+
+如果不能走索引就会走表锁 
+
+行锁的上锁过程是，先Next-Key Lock，然后向后遍历索引直到不满足，最后一个变为间隙锁
+**/
+
+show status like 'innodb_row_lock%';
