@@ -47,3 +47,7 @@ Record Lock  是行锁
 **/
 
 show status like 'innodb_row_lock%';
+
+
+MVCC 每一个事务加版本号（时间戳）形成版本链，采用快照读而不是当前读，可以解决读写冲突，保证一致行读取，但是不解决写写冲突。
+高性能的读写解决方案:1.MVCC + 悲观锁  2.MVCC + 乐观锁(CAS)
